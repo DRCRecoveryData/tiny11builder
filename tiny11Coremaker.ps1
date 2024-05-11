@@ -244,42 +244,36 @@ $destinationDirectory = "$mainOSDrive\scratchdir\Windows\WinSxS_edit"
 New-Item -Path $folderPath -ItemType Directory
 if ($architecture -eq "amd64") {
     # Specify the list of files to copy
-   $dirsToCopy = @(
-        "x86_microsoft.windows.common-controls_6595b64144ccf1df_*",
-        "x86_microsoft.windows.gdiplus_6595b64144ccf1df_*",    
-        "x86_microsoft.windows.i..utomation.proxystub_6595b64144ccf1df_*",
-        "x86_microsoft.windows.isolationautomation_6595b64144ccf1df_*",
-        "x86_microsoft-windows-s..ngstack-onecorebase_31bf3856ad364e35_*",
-        "x86_microsoft-windows-s..stack-termsrv-extra_31bf3856ad364e35_*",
-        "x86_microsoft-windows-servicingstack_31bf3856ad364e35_*",
-        "x86_microsoft-windows-servicingstack-inetsrv_*",
-        "x86_microsoft-windows-servicingstack-onecore_*",
-        "amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_*",
-        "amd64_microsoft.vc90.crt_1fc8b3b9a1e18e3b_*",
-        "amd64_microsoft.windows.c..-controls.resources_6595b64144ccf1df_*",
-        "amd64_microsoft.windows.common-controls_6595b64144ccf1df_*",
-        "amd64_microsoft.windows.gdiplus_6595b64144ccf1df_*",
-        "amd64_microsoft.windows.i..utomation.proxystub_6595b64144ccf1df_*",
-        "amd64_microsoft.windows.isolationautomation_6595b64144ccf1df_*",
-        "amd64_microsoft-windows-s..stack-inetsrv-extra_31bf3856ad364e35_*",
-        "amd64_microsoft-windows-s..stack-msg.resources_31bf3856ad364e35_*",
-        "amd64_microsoft-windows-s..stack-termsrv-extra_31bf3856ad364e35_*",
-        "amd64_microsoft-windows-servicingstack_31bf3856ad364e35_*",
-        "amd64_microsoft-windows-servicingstack-inetsrv_31bf3856ad364e35_*",
-        "amd64_microsoft-windows-servicingstack-msg_31bf3856ad364e35_*",
-        "amd64_microsoft-windows-servicingstack-onecore_31bf3856ad364e35_*",
+    $dirsToCopy = @(
+        "amd64_microsoft-windows-s..cingstack.resources",
+        "amd64_microsoft-windows-servicingstack",
+        "amd64_microsoft.vc80",
+        "amd64_microsoft.vc90",
+        "amd64_microsoft.windows.c..-controls.resources",
+        "amd64_microsoft.windows.c..-controls.resources",
+        "amd64_microsoft.windows.common-controls",
+        "amd64_microsoft.windows.common-controls",
+        "amd64_microsoft.windows.gdiplus",
+        "amd64_microsoft.windows.gdiplus",
+        "amd64_microsoft-windows-com-dtc-runtime",
+        "amd64_microsoft-windows-t..languages.resources",
+        "amd64_microsoft-windows-userexperience-desktop",
         "Catalogs",
-        "FileMaps",
-        "Fusion",
         "InstallTemp",
         "Manifests",
-        "x86_microsoft.vc80.crt_1fc8b3b9a1e18e3b_*",
-        "x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_*",
-        "x86_microsoft.windows.c..-controls.resources_6595b64144ccf1df_*",
-        "x86_microsoft.windows.c..-controls.resources_6595b64144ccf1df_*"
+        "Fusion",
+        "x86_microsoft.vc80",
+        "x86_microsoft.vc90",
+        "x86_microsoft.windows.c..-controls.resources",
+        "x86_microsoft.windows.c..-controls.resources",
+        "x86_microsoft.windows.common-controls",
+        "x86_microsoft.windows.common-controls",
+        "x86_microsoft.windows.gdiplus",
+        "x86_microsoft.windows.gdiplus",
+        "x86_microsoft-windows-userexperience-desktop"
     )
- # Copy each directory
-   foreach ($dir in $dirsToCopy) {
+    # Copy each directory
+    foreach ($dir in $dirsToCopy) {
         $sourceDirs = Get-ChildItem -Path $sourceDirectory -Filter $dir -Directory
         foreach ($sourceDir in $sourceDirs) {
             $destDir = Join-Path -Path $destinationDirectory -ChildPath $sourceDir.Name
@@ -525,130 +519,6 @@ reg delete "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Sch
 reg delete "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{8A9C643C-3D74-4099-B6BD-9C6D170898B1}" /f
 Write-Host 'Deleting QueueReporting'
 reg delete "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{E3176A65-4E44-4ED3-AA73-3283660ACB9C}" /f
-Write-Host "Disabling Windows Update..."
-& 'reg' 'add' "HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" '/v' 'StopWUPostOOBE1' '/t' 'REG_SZ' '/d' 'net stop wuauserv' '/f'
-& 'reg' 'add' "HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" '/v' 'StopWUPostOOBE2' '/t' 'REG_SZ' '/d' 'sc stop wuauserv' '/f'
-& 'reg' 'add' "HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" '/v' 'StopWUPostOOBE3' '/t' 'REG_SZ' '/d' 'sc config wuauserv start= disabled' '/f'
-& 'reg' 'add' "HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" '/v' 'DisbaleWUPostOOBE1' '/t' 'REG_SZ' '/d' 'reg add HKLM\SYSTEM\CurrentControlSet\Services\wuauserv /v Start /t REG_DWORD /d 4 /f' '/f'
-& 'reg' 'add' "HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" '/v' 'DisbaleWUPostOOBE2' '/t' 'REG_SZ' '/d' 'reg add HKLM\SYSTEM\ControlSet001\Services\wuauserv /v Start /t REG_DWORD /d 4 /f' '/f'
-& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' '/v' 'DoNotConnectToWindowsUpdateInternetLocations' '/t' 'REG_DWORD' '/d' '1' '/f'
-& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' '/v' 'DisableWindowsUpdateAccess' '/t' 'REG_DWORD' '/d' '1' '/f' 
-& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' '/v' 'WUServer' '/t' 'REG_SZ' '/d' 'localhost' '/f' 
-& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' '/v' 'WUStatusServer' '/t' 'REG_SZ' '/d' 'localhost' '/f' 
-& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' '/v' 'UpdateServiceUrlAlternate' '/t' 'REG_SZ' '/d' 'localhost' '/f' 
-& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' '/v' 'UseWUServer' '/t' 'REG_DWORD' '/d' '1' '/f' 
-& 'reg' 'add' 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\OOBE' '/v' 'DisableOnline' '/t' 'REG_DWORD' '/d' '1' '/f' 
-& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Services\wuauserv' '/v' 'Start' '/t' 'REG_DWORD' '/d' '4' '/f' 
-function Disable-Privilege {
- param(
-  [ValidateSet(
-   "SeAssignPrimaryTokenPrivilege", "SeAuditPrivilege", "SeBackupPrivilege",
-   "SeChangeNotifyPrivilege", "SeCreateGlobalPrivilege", "SeCreatePagefilePrivilege",
-   "SeCreatePermanentPrivilege", "SeCreateSymbolicLinkPrivilege", "SeCreateTokenPrivilege",
-   "SeDebugPrivilege", "SeEnableDelegationPrivilege", "SeImpersonatePrivilege", "SeIncreaseBasePriorityPrivilege",
-   "SeIncreaseQuotaPrivilege", "SeIncreaseWorkingSetPrivilege", "SeLoadDriverPrivilege",
-   "SeLockMemoryPrivilege", "SeMachineAccountPrivilege", "SeManageVolumePrivilege",
-   "SeProfileSingleProcessPrivilege", "SeRelabelPrivilege", "SeRemoteShutdownPrivilege",
-   "SeRestorePrivilege", "SeSecurityPrivilege", "SeShutdownPrivilege", "SeSyncAgentPrivilege",
-   "SeSystemEnvironmentPrivilege", "SeSystemProfilePrivilege", "SeSystemtimePrivilege",
-   "SeTakeOwnershipPrivilege", "SeTcbPrivilege", "SeTimeZonePrivilege", "SeTrustedCredManAccessPrivilege",
-   "SeUndockPrivilege", "SeUnsolicitedInputPrivilege")]
-  $Privilege,
-  ## The process on which to adjust the privilege. Defaults to the current process.
-  $ProcessId = $pid,
-  ## Switch to disable the privilege, rather than enable it.
-  [Switch] $Disable
- )
- $definition = @'
- using System;
- using System.Runtime.InteropServices;
-  
- public class AdjPriv
- {
-  [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
-  internal static extern bool AdjustTokenPrivileges(IntPtr htok, bool disall,
-   ref TokPriv1Luid newst, int len, IntPtr prev, IntPtr relen);
-  
-  [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
-  internal static extern bool OpenProcessToken(IntPtr h, int acc, ref IntPtr phtok);
-  [DllImport("advapi32.dll", SetLastError = true)]
-  internal static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
-  [StructLayout(LayoutKind.Sequential, Pack = 1)]
-  internal struct TokPriv1Luid
-  {
-   public int Count;
-   public long Luid;
-   public int Attr;
-  }
-  
-  internal const int SE_PRIVILEGE_ENABLED = 0x00000002;
-  internal const int SE_PRIVILEGE_DISABLED = 0x00000000;
-  internal const int TOKEN_QUERY = 0x00000008;
-  internal const int TOKEN_ADJUST_PRIVILEGES = 0x00000020;
-  public static bool EnablePrivilege(long processHandle, string privilege, bool disable)
-  {
-   bool retVal;
-   TokPriv1Luid tp;
-   IntPtr hproc = new IntPtr(processHandle);
-   IntPtr htok = IntPtr.Zero;
-   retVal = OpenProcessToken(hproc, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, ref htok);
-   tp.Count = 1;
-   tp.Luid = 0;
-   if(disable)
-   {
-    tp.Attr = SE_PRIVILEGE_DISABLED;
-   }
-   else
-   {
-    tp.Attr = SE_PRIVILEGE_ENABLED;
-   }
-   retVal = LookupPrivilegeValue(null, privilege, ref tp.Luid);
-   retVal = AdjustTokenPrivileges(htok, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero);
-   return retVal;
-  }
- }
-'@
-
- $processHandle = (Get-Process -id $ProcessId).Handle
- $type = Add-Type $definition -PassThru
- $type[0]::EnablePrivilege($processHandle, $Privilege, $Disable)
-}
-
-Disable-Privilege SeTakeOwnershipPrivilege
-$everyone = New-Object System.Security.Principal.NTAccount('Everyone')
-$accessRule = New-Object System.Security.AccessControl.RegistryAccessRule($everyone, 'ReadKey', 'Allow')
-$regKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey("zSYSTEM\ControlSet001\Services\wuauserv",[Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,[System.Security.AccessControl.RegistryRights]::TakeOwnership)
-$regACL = $regKey.GetAccessControl()
-$regACL.SetOwner($everyone)
-$regKey.Close()
-Write-Host "Owner changed to Everyone."
-$regKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey("zSYSTEM\ControlSet001\Services\wuauserv",[Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,[System.Security.AccessControl.RegistryRights]::ChangePermissions)
-$regACL = $regKey.GetAccessControl()
-$regRule = New-Object System.Security.AccessControl.RegistryAccessRule ($everyone, 'ReadKey', 'Allow')
-$regACL.SetAccessRule($regRule)
-$regKey.SetAccessControl($regACL)
-Write-Host "Permissions modified for Everyone group."
-Write-Host "Registry key permissions successfully updated."
-
-
-Write-Host "All users have been granted read-only access to the registry key."
-$regKey.Close()
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{2540477E-E654-4302-AD44-383BBFFBFF16}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{341B2255-6A6B-442A-AF5A-C610B7DBE12D}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{476E8CFA-78E2-4C51-854E-538F8643B4FD}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{764DDB74-CB08-4E0A-8580-B41F94F2C7BE}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{817CCFDD-4DD0-4102-AC6E-3F5D3B789FB8}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{99CEDA8C-A866-4787-BBD3-6F3C9F61DD5C}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{9B3CDCDA-4197-490B-AA5C-C9F5F42A9D88}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{9CBBFAAE-DB9F-48B4-BAC0-4CFF482A4E01}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{A31197EC-EAEE-4837-8A9C-3A17D358B9EB}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{B4FBEFA9-6F7C-4C74-A891-3774B7BCD072}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{B53BD60A-5823-411C-9C75-AA91DB3C35F8}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{CECDC345-7460-4A15-9D8B-DAC3F9CC5368}" '/f'
-& 'reg' 'delete' "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{E0F10DCF-44AD-40E8-9370-FB5DA59F93FB}" '/f'
-& 'reg' 'delete' 'HKLM\zSYSTEM\ControlSet001\Services\WaaSMedicSVC' '/f'
-& 'reg' 'delete' 'HKLM\zSYSTEM\ControlSet001\Services\UsoSvc' '/f'
-& 'reg' 'add' 'HKEY_LOCAL_MACHINE\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' '/v' 'NoAutoUpdate' '/t' 'REG_DWORD' '/d' '1' '/f'
 Write-Host "Disabling Windows Defender"
 # Set registry values for Windows Defender services
 $servicePaths = @(
@@ -662,7 +532,7 @@ $servicePaths = @(
 foreach ($path in $servicePaths) {
     Set-ItemProperty -Path "HKLM:\zSYSTEM\ControlSet001\Services\$path" -Name "Start" -Value 4
 }
-& 'reg' 'add' 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer' '/v' 'SettingsPageVisibility' '/t' 'REG_SZ' '/d' 'hide:virus;windowsupdate' '/f' 
+
 Write-Host "Tweaking complete!"
 Write-Host "Unmounting Registry..."
 $regKey.Close()
